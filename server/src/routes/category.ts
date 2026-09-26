@@ -16,27 +16,27 @@ function parseNewCategory(body: unknown): NewCategory | null {
 
 export const categoryRouter = Router();
 
-categoryRouter.get("/", (_req, res) => {
-    res.json(getCategories());
+categoryRouter.get("/", async (_req, res) => {
+    res.json(await getCategories());
 });
 
-categoryRouter.post("/", (req, res) => {
+categoryRouter.post("/", async (req, res) => {
     const newCategory = parseNewCategory(req.body);
     if (!newCategory) {
         res.status(400).json({ error: "name is required" });
         return;
     }
-    const created = addCategory(newCategory);
+    const created = await addCategory(newCategory);
     res.status(201).json(created);
 });
 
-categoryRouter.put("/:id", (req, res) => {
+categoryRouter.put("/:id", async (req, res) => {
     const update = parseNewCategory(req.body);
     if (!update) {
         res.status(400).json({ error: "name is required" });
         return;
     }
-    const updated = updateCategory(req.params.id, update);
+    const updated = await updateCategory(req.params.id, update);
     if (!updated) {
         res.status(404).json({ error: "Category not found" });
         return;
@@ -44,8 +44,8 @@ categoryRouter.put("/:id", (req, res) => {
     res.json(updated);
 });
 
-categoryRouter.delete("/:id", (req, res) => {
-    const deleted = deleteCategory(req.params.id);
+categoryRouter.delete("/:id", async (req, res) => {
+    const deleted = await deleteCategory(req.params.id);
     if (!deleted) {
         res.status(404).json({ error: "Category not found" });
         return;
