@@ -4,7 +4,7 @@ Starting point for the Web Software Production course project.
 This project will grow week by week.
 
 - `client/` — React + Vite + TypeScript frontend
-- `server/` — Node + Express + TypeScript backend (in-memory storage)
+- `server/` — Node + Express + TypeScript backend (PostgreSQL storage)
 
 Each part is an independent npm project with its own `node_modules`, and its own Biome config for linting/formatting.
 
@@ -25,11 +25,11 @@ src/
   app.ts                     # configures the Express app (middleware + routes)
   server.ts                  # entry point: starts listening
   types/expense.ts           # Expense / NewExpense types
-  store/expense.ts           # in-memory storage
+  store/expense.ts           # database queries (PostgreSQL)
   routes/expense.ts          # GET/POST/PUT/DELETE handlers, mounted at /api/expenses
 ```
 
-Storage is in-memory only (see `server/src/store/expense.ts`) — data resets every time the server restarts, and it isn't shared across multiple server instances. There's no database yet.
+Storage is PostgreSQL, via the connection pool in `server/src/db/pool.ts`. The connection details come from environment variables (`PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`, `PGDATABASE`). Start the database with `docker compose up -d db`. To run the server outside Compose, put these variables in `server/.env` (never commit it).
 
 Available endpoints, all under `/api/expenses`:
 
@@ -87,3 +87,9 @@ npm run lint:fix  # same, but apply the fixes it can make automatically
 ```
 
 `lint:fix` won't touch anything it can't fix safely (e.g. an unused variable) — it'll still report those for you to fix by hand.
+
+## Testing
+
+The server has unit tests and integration tests, using Vitest and Supertest. Run them from the `server` folder with `npm test`.
+
+The integration tests use a separate database, `app_test_db`, so they never touch development data. The database must be running first (`docker compose up -d db`).

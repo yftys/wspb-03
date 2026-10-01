@@ -13,7 +13,7 @@ export function toExpense(row: {
         id: row.id,
         description: row.description,
         amount: Number(row.amount),
-        date: row.date.toISOString().slice(0, 10),
+        date: formatDate(row.date),
     };
 }
 
@@ -53,4 +53,15 @@ export async function deleteExpense(id: string): Promise<boolean> {
         id,
     ]);
     return rowCount !== null && rowCount > 0;
+}
+
+// Formats a Date as YYYY-MM-DD using its local calendar parts.
+// The pg driver parses a DATE into a Date at local midnight, so local
+// getters round-trip it faithfully. toISOString() converts to UTC first
+// and, east of UTC, rolls the date back a day.
+function formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
 }
