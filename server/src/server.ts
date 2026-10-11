@@ -5,5 +5,7 @@ import { app } from "./app.js";
 const port = 3001;
 
 app.listen(port, () => {
-	console.log(`Yasaman's Expense API up and running on port http://localhost:${port}`);
+	console.log(
+		`Yasaman's Expense API up and running on port http://localhost:${port}`,
+	);
 });

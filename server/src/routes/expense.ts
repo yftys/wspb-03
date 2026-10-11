@@ -28,7 +28,7 @@ export function parseNewExpense(body: unknown): NewExpense | null {
 export const expenseRouter = Router();
 
 expenseRouter.get("/", async (_req, res) => {
-	res.json( await getExpenses());
+	res.json(await getExpenses());
 });
 
 expenseRouter.post("/", async (req, res) => {
@@ -53,7 +53,7 @@ expenseRouter.put("/:id", async (req, res) => {
 		return;
 	}
 
-	const expense =await updateExpense(req.params.id, update);
+	const expense = await updateExpense(req.params.id, update);
 	if (!expense) {
 		res.status(404).json({ error: "Expense not found" });
 		return;
