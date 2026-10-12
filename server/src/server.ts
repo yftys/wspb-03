@@ -9,4 +9,3 @@ app.listen(port, () => {
 		`Yasaman's Expense API up and running on port http://localhost:${port}`,
 	);
 });
-const    badFormat   =    1;
