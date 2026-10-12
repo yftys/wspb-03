@@ -58,3 +58,36 @@ jobs:
           node-version: 22
       - run: npm ci
       - run: npm run build
+    test-server:
+    needs: [build-client, build-server]
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: app_pw
+          POSTGRES_DB: app_test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U app"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: localhost
+      PGPORT: "5432"
+      PGUSER: app
+      PGPASSWORD: app_pw
+      PGDATABASE: app_test_db
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: psql -f db/init/001-schema.sql
+      - run: npm ci
+        working-directory: server
+      - run: npm test
+        working-directory: server
