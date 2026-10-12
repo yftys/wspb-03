@@ -58,7 +58,7 @@ jobs:
           node-version: 22
       - run: npm ci
       - run: npm run build
-    test-server:
+  test-server:
     needs: [build-client, build-server]
     runs-on: ubuntu-latest
     services:
